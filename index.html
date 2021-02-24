@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fetch</title>
+  </head>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    }
+
+    div {
+      display: flex;
+      justify-content: center;
+      margin: 20px;
+      position: relative;
+    }
+
+    input {
+      height: 30px;
+      outline: none;
+      border-radius: 5px;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      padding-left: 5px;
+    }
+
+    button {
+      outline: none;
+      width: 100px;
+      height: 30px;
+      margin: 0 10px;
+      border-radius: 5px;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+    }
+
+    button:hover {
+      cursor: pointer;
+    }
+  </style>
+  <body>
+    <div class="input-container">
+      <input type="text" />
+    </div>
+
+    <div class="button-container">
+      <button class="search">Search</button>
+      <button class="refresh">Refresh</button>
+    </div>
+
+    <div class="image-container"><img src="#" /></div>
+
+    <script>
+      const getNewImage = function () {
+        const img = document.querySelector("img");
+        fetch(
+          "https://api.giphy.com/v1/gifs/translate?api_key=FqvOmUZKaP6RXOYt0T44P32BKBOKpmaA&s=cat",
+          { mode: "cors" }
+        )
+          .then(function (response) {
+            return response.json();
+          })
+          .then(function (response) {
+            img.src = response.data.images.original.url;
+          });
+      };
+
+      document.addEventListener("click", (e) => {
+        if (e.target.matches(".refresh")) {
+          getNewImage();
+        }
+      });
+
+      getNewImage();
+    </script>
+  </body>
+</html>
