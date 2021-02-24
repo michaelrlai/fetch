@@ -13,6 +13,7 @@
       box-sizing: border-box;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
         Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      font-size: 14px;
     }
 
     div {
@@ -42,24 +43,48 @@
     button:hover {
       cursor: pointer;
     }
+
+    .image-container {
+      max-width: 80vw;
+    }
+
+    .image-container {
+      margin: 0;
+    }
+
+    img {
+      max-width: 100%;
+    }
+
+    .error-container {
+      font-size: 10px;
+      color: darkred;
+    }
   </style>
   <body>
     <div class="input-container">
-      <input type="text" />
+      <input class="input" type="text" />
     </div>
 
     <div class="button-container">
-      <button class="search">Search</button>
       <button class="refresh">Refresh</button>
     </div>
 
-    <div class="image-container"><img src="#" /></div>
+    <div>
+      <div class="image-container"><img src="#" /></div>
+    </div>
+
+    <div class="error-container"></div>
 
     <script>
-      const getNewImage = function () {
+      const getNewImage = function (inputTerm) {
         const img = document.querySelector("img");
+        if (inputTerm !== "") {
+          searchTerm = inputTerm;
+        }
+        console.log(searchTerm);
         fetch(
-          "https://api.giphy.com/v1/gifs/translate?api_key=FqvOmUZKaP6RXOYt0T44P32BKBOKpmaA&s=cat",
+          `https://api.giphy.com/v1/gifs/translate?api_key=FqvOmUZKaP6RXOYt0T44P32BKBOKpmaA&s=${searchTerm}`,
           { mode: "cors" }
         )
           .then(function (response) {
@@ -67,16 +92,28 @@
           })
           .then(function (response) {
             img.src = response.data.images.original.url;
+            document.querySelector(".error-container").textContent = "";
+          })
+          .catch(function () {
+            document.querySelector(".error-container").textContent =
+              "No gifs found";
+            console.log("error");
           });
       };
 
       document.addEventListener("click", (e) => {
         if (e.target.matches(".refresh")) {
-          getNewImage();
+          getNewImage(document.querySelector(".input").value);
         }
       });
 
-      getNewImage();
+      document.querySelector("input").addEventListener("keydown", (e) => {
+        if (e.keyCode === 13) {
+          getNewImage(document.querySelector(".input").value);
+        }
+      });
+
+      getNewImage("cat");
     </script>
   </body>
 </html>
