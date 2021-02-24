@@ -86,28 +86,17 @@
     <div class="error-container"></div>
 
     <script>
-      const getNewImage = function (inputTerm) {
+      const getNewImage = async function (inputTerm) {
         const img = document.querySelector("img");
         if (inputTerm !== "") {
           searchTerm = inputTerm;
         }
-        console.log(searchTerm);
-        fetch(
+        const response = await fetch(
           `https://api.giphy.com/v1/gifs/translate?api_key=FqvOmUZKaP6RXOYt0T44P32BKBOKpmaA&s=${searchTerm}`,
           { mode: "cors" }
-        )
-          .then(function (response) {
-            return response.json();
-          })
-          .then(function (response) {
-            img.src = response.data.images.original.url;
-            document.querySelector(".error-container").textContent = "";
-          })
-          .catch(function () {
-            document.querySelector(".error-container").textContent =
-              "No gifs found";
-            console.log("error");
-          });
+        );
+        const searchData = await response.json();
+        img.src = searchData.data.images.original.url;
       };
 
       document.addEventListener("click", (e) => {
